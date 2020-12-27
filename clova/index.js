@@ -4,50 +4,20 @@ const { DOMAIN } = require('../config')
 
 class Directive {
   constructor({namespace, name, payload}) {
-    this.header = {
-      messageId: uuid(),
-      namespace: namespace,
-      name: name,
-    }
+    this.header = { messageId: uuid(), namespace: namespace, name: name }
     this.payload = payload
   }
 }
 
 function audioDirective() {
   episodeId = Math.floor(Math.random() * 1000)
-  return new Directive({
-    namespace: 'AudioPlayer',
-    name: 'Play',
-    payload: {
-      audioItem: {
-        audioItemId: uuid(),
-        stream: {
-          beginAtInMilliseconds: 0,
-          playType: "NONE",
-          token: uuid(),
-          url: `${DOMAIN}/rainning_sound.mp3`,
-          urlPlayable: true
-        },
-        type: "custom",
-      },
-      playBehavior: "REPLACE_ALL",
-      source: {
-        logoUrl: `${DOMAIN}/img_sound_rain_108.png`,
-        name: "소리 시리즈"
-      }
-    }
-  })
-}
+  return new Directive({ namespace: 'AudioPlayer', name: 'Play', payload: { audioItem: { audioItemId: uuid(), stream: { beginAtInMilliseconds: 0, playType: "NONE", token: uuid(), url: `${DOMAIN}/rainning_sound.mp3`, urlPlayable: true }, type: "custom" },    playBehavior: "REPLACE_ALL", source: { logoUrl: `${DOMAIN}/img_sound_rain_108.png`, name: "소리 시리즈" }}})}
 
 class CEKRequest {
   constructor (httpReq) {
     this.request = httpReq.body.request
     this.context = httpReq.body.context
     this.session = httpReq.body.session
-
-    console.log('CEK Request')
-    console.log(`session: ${JSON.stringify(this.session)}`)
-    console.log(`context: ${JSON.stringify(this.context)}`)
   }
 
   do(cekResponse) {
@@ -68,8 +38,6 @@ class CEKRequest {
   }
 
   intentRequest(cekResponse) {
-    console.log('intentRequest')
-    console.log(JSON.stringify(this.request))
     const intent = this.request.intent.name
     const slots = this.request.intent.slots
 
@@ -171,6 +139,6 @@ const clovaReq = function (httpReq, httpRes, next) {
   console.log('CEK Response')
   console.log(JSON.stringify(cekResponse))
   return httpRes.send(cekResponse)
-};
+}
 
-module.exports = clovaReq;
+module.exports = clovaReq
