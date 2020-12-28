@@ -1,4 +1,6 @@
 module.exports = {
   SERVER_PORT: process.env.SERVER_PORT || 3000,
-  DOMAIN: 'http://static.naver.net/clova/service/native_extensions/sound_serise'
+  STUDY: 'https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1609146561/ei/YUzpX9O1IJeRgQPgkaWIBA/ip/125.186.108.216/id/5qap5aO4i9A.0/source/yt_live_broadcast/requiressl/yes/hfr/1/ctier/A/playlist_duration/30/manifest_duration/30/maxh/2160/maudio/1/hightc/yes/vprv/1/go/1/nvgoi/1/keepalive/yes/dover/11/itag/0/playlist_type/DVR/sparams/expire%2Cei%2Cip%2Cid%2Csource%2Crequiressl%2Chfr%2Cctier%2Cplaylist_duration%2Cmanifest_duration%2Cmaxh%2Cmaudio%2Chightc%2Cvprv%2Cgo%2Citag%2Cplaylist_type/sig/AOq0QJ8wRgIhAPrFhfD8Q6uO8n54xw30n1F9GpUlZRLj90yFLn1kRvekAiEAjstrcSGoywXoStpj17p_QhwD_UxGx3XadPk6KFUqsjI%3D/file/index.m3u8',
+  SLEEP: 'https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1609141176/ei/WDfpX_zPJIHM4wLJjZDoCQ/ip/125.186.108.216/id/DWcJFNfaw9c.2/source/yt_live_broadcast/requiressl/yes/hfr/1/ctier/A/playlist_duration/30/manifest_duration/30/maxh/2160/maudio/1/hightc/yes/vprv/1/go/1/nvgoi/1/keepalive/yes/dover/11/itag/0/playlist_type/DVR/sparams/expire%2Cei%2Cip%2Cid%2Csource%2Crequiressl%2Chfr%2Cctier%2Cplaylist_duration%2Cmanifest_duration%2Cmaxh%2Cmaudio%2Chightc%2Cvprv%2Cgo%2Citag%2Cplaylist_type/sig/AOq0QJ8wRgIhAN7nlRiTPBhPtKLc3X1cp5h7d4pvNv2Y_7kChsvTb4AQAiEA8ZTAt0u98P8FLF-xtiVPNMvbczBlArgZh8U8KQLbeOs%3D/file/index.m3u8',
+  IMAGE: 'https://yt3.ggpht.com/ytc/AAUvwnjToEFDnQETlCMEOWOaiDNzqDkdhtXI1XgA5DN6vA=s48-c-k-c0xffffffff-no-rj-mo'
 }

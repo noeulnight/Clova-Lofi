@@ -1,6 +1,6 @@
 const uuid = require('uuid').v4
 const _ = require('lodash')
-const { DOMAIN } = require('../config')
+const { STUDY, SLEEP, IMAGE } = require('../config')
 
 class Directive {
   constructor({namespace, name, payload}) {
@@ -9,9 +9,146 @@ class Directive {
   }
 }
 
-function audioDirective() {
+function sleeplofi() {
   episodeId = Math.floor(Math.random() * 1000)
-  return new Directive({ namespace: 'AudioPlayer', name: 'Play', payload: { audioItem: { audioItemId: uuid(), stream: { beginAtInMilliseconds: 0, playType: "NONE", token: uuid(), url: `${DOMAIN}/rainning_sound.mp3`, urlPlayable: true }, type: "custom" },    playBehavior: "REPLACE_ALL", source: { logoUrl: `${DOMAIN}/img_sound_rain_108.png`, name: "소리 시리즈" }}})}
+  return new Directive({ 
+    namespace: 'AudioPlayer',
+    name: 'Play',
+    payload : {
+      audioItem : {
+        audioItemId : uuid(),
+        episodeId : episodeId,
+        stream : {
+          beginAtInMilliseconds : 0,
+          token : 'eJyr5lIqSSyITy4tKs4vUrJSUE',
+          url : SLEEP,
+          urlPlayable : true
+        },
+        type : "podcast"
+      },
+      source : {
+        name : 'lofi hip hop radio - beats to sleep/chill to',
+        logoUrl : IMAGE
+      },
+      playBehavior : "REPLACE_ALL"
+    }
+  })
+}
+
+function studylofi() {
+  episodeId = Math.floor(Math.random() * 1000)
+  return new Directive({ 
+    namespace: 'AudioPlayer',
+    name: 'Play',
+    payload : {
+      audioItem : {
+        audioItemId : uuid(),
+        episodeId : episodeId,
+        stream : {
+          beginAtInMilliseconds : 0,
+          token : 'eJyr5lIqSSyITy4tKs4vUrEKSC',
+          url : STUDY,
+          urlPlayable : true
+        },
+        type : "podcast"
+      },
+      source : {
+        name : 'lofi hip hop radio - beats to relax/study to',
+        logoUrl : IMAGE
+      },
+      playBehavior : "REPLACE_ALL"
+    }
+  })
+}
+
+function meta() {
+  return new Directive({ 
+    namespace: 'TemplateRuntime', 
+    name: 'RenderPlayerInfo', 
+    payload: { 
+      controls: [
+        { 
+          enabled: true, 
+          name: "PLAY_PAUSE", 
+          selected: false, 
+          type: "BUTTON" 
+        }, 
+        { 
+          enabled: false, 
+          name: "NEXT", 
+          selected: false, 
+          type: "BUTTON" 
+        }, 
+        { 
+          enabled: false, 
+          name: "PREVIOUS", 
+          selected: false, 
+          type: "BUTTON" 
+        }
+      ], 
+      displayType: "list", 
+      playableItems: [
+        {
+          artImageUrl: 'https://cdn.trinets.xyz/d/kcLnJ4T~Hq.jpeg', 
+          controls: [
+            { 
+              enabled: false, 
+              name: "LIKE_DISLIKE", 
+              selected: false, 
+              type: "BUTTON" 
+            }
+          ], 
+          headerText: "Lofi", 
+          lyrics: [
+            { 
+              data: null, 
+              format: "PLAIN", 
+              url: null 
+            }
+          ], 
+          isLive: true, 
+          showAdultIcon: false, 
+          titleSubText1: "Lofi hip hop radio / Chilled Cow", 
+          titleText: "Beats to sleep/chill to", 
+          token: "eJyr5lIqSSyITy4tKs4vUrJSUE"
+        },
+        {
+          artImageUrl: 'https://cdn.trinets.xyz/d/TKDj3fujpo.jpeg', 
+          controls: [
+            { 
+              enabled: false, 
+              name: "LIKE_DISLIKE",
+              selected: false, 
+              type: "BUTTON" 
+            }
+          ], 
+          headerText: "Lofi", 
+          lyrics: [
+            { 
+              data: null, 
+              format: "PLAIN", 
+              url: null 
+            }
+          ], 
+          isLive: true, 
+          showAdultIcon: false, 
+          titleSubText1: "Lofi hip hop radio / Chilled Cow", 
+          titleText: "Beats to relax/study to", 
+          token: "eJyr5lIqSSyITy4tKs4vUrEKSC" 
+        }
+      ], 
+      provider: { 
+        logoUrl: IMAGE, 
+        name: "ChilledCow", 
+        smallLogoUrl: "" 
+      }
+    }
+  })
+}
+
+function stop() {
+  return new Directive({ namespace: "PlaybackController", name: "Pause", payload: {}})
+}
 
 class CEKRequest {
   constructor (httpReq) {
@@ -22,57 +159,78 @@ class CEKRequest {
 
   do(cekResponse) {
     switch (this.request.type) {
-      case "LaunchRequest":
+      case 'LaunchRequest':
         return this.launchRequest(cekResponse)
-      case "IntentRequest":
+      case 'IntentRequest':
         return this.intentRequest(cekResponse)
-      case "SessionEndedRequest":
+      case 'SessionEndedRequest':
         return this.sessionEndedRequest(cekResponse)
     }
   }
 
   launchRequest(cekResponse) {
     console.log('launchRequest')
-    cekResponse.appendSpeechText("빗소리를 재생합니다.")
-    cekResponse.addDirective(audioDirective())
+    cekResponse.appendSpeechText("무슨 로파이를 재생할까요?")
+    cekResponse.setMultiturn({
+      intent: 'PlayLofi',
+    })
   }
 
   intentRequest(cekResponse) {
     const intent = this.request.intent.name
     const slots = this.request.intent.slots
-
     switch (intent) {
-    case "PlayIntent":
-    case "PlayLoopIntent":
-      let loopCount
-      const loopCountSlot = slots.loopCount
-      if (intent == "PlayIntent") {
-        loopCount = 1
-      } else if (slots.length == 0 || !loopCountSlot) {
-        loopCount = 3
-      } else {
-        loopCount = parseInt(loopCountSlot.value)
+      case 'PlayLofi':
+        const TypeofLofi = slots.lofi.value
+        switch (TypeofLofi) {
+          case 'study': {
+            cekResponse.appendSpeechText("공부할때 듣는 로파이를 시작합니다.")
+            cekResponse.addDirective(studylofi())
+            cekResponse.addDirective(meta())
+            cekResponse.addDirective(new Directive({ namespace: "PlaybackController", name: "Play", payload: {}}))
+            break
+          }
+          case 'sleep': {
+            cekResponse.appendSpeechText("잘때 듣는 로파이를 시작합니다.")
+            cekResponse.addDirective(sleeplofi())
+            cekResponse.addDirective(meta())
+            cekResponse.addDirective(new Directive({ namespace: "PlaybackController", name: "Play", payload: {}}))
+            break
+          }
+          case 'help': {
+            cekResponse.appendSpeechText("공부할때 듣는 로파이 또는 잘때 든는 로파이 틀어줘, 라고 시도해보세요.")
+            cekResponse.setMultiturn({
+              intent: 'PlayLofi',
+            })
+          }
+          default:{
+            cekResponse.appendSpeechText("없는 로파이 종류입니다")
+            cekResponse.appendSpeechText("로파이 종류 알려줘, 라고 시도해보세요.")
+            cekResponse.setMultiturn({
+              intent: 'PlayLofi',
+            })
+            break
+          }
+        }
+        break
+      case 'StopLofi': {
+        cekResponse.addDirective(stop())
+        cekResponse.appendSpeechText("로파이를 중지했습니다.")
+        break
       }
-
-      if (loopCount == 1) {
-        cekResponse.appendSpeechText("빗소리를 재생합니다.")
-      } else {
-        cekResponse.appendSpeechText(`빗소리를 ${loopCount}번 재생합니다.`)
+      case Clova.GuideIntent: {
+        cekResponse.appendSpeechText("없는 로파이 종류입니다")
+        cekResponse.appendSpeechText("로파이 종류 알려줘, 라고 시도해보세요.")
+        cekResponse.setMultiturn({
+          intent: 'PlayLofi',
+        })
+        break
       }
-      for (let i = 0; i < loopCount; i++) {
-        cekResponse.addDirective(audioDirective())
-      }
-      break
-    case "Clova.GuideIntent":
-      cekResponse.appendSpeechText("죄송해요. 이해할 수 없습니다.")
-      cekResponse.appendSpeechText("빗소리 틀어줘, 라고 시도해보세요.")
-      break;
     }
   }
 
   sessionEndedRequest(cekResponse) {
-    console.log('sessionEndedRequest')
-    cekResponse.setSimpleSpeechText("빗소리 익스텐션을 종료합니다.")
+    cekResponse.setSimpleSpeechText("로파이 플레이어를 종료합니다.")
     cekResponse.clearMultiturn()
   }
 }
@@ -109,7 +267,7 @@ class CEKResponse {
       values: {
           type: "PlainText",
           lang: "ko",
-          value: outputText,
+          value: "outputText",
       },
     }
   }
